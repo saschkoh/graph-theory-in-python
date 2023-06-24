@@ -21,13 +21,13 @@ class Dijkstra:
         # initialize the distances vector
         distances = [float("inf") for _ in range(len(self.graph.node_count))]
         distances[target_idx] = 0
-        # initialize the predecessors heap
+        # initialize the backward neighbors heap
         heap = [(dict[target_idx], target_idx)]
         while heap:
-            _, node_index = heapq.heappop(heap)
-            for edge in self.graph.nodes[node_index].b_edges:
-                if distances[edge.head.index] > distances[node_index] + edge.weight:
-                    distances[edge.head.index] = distances[edge.node_index] + edge.weight
+            _, node_idx = heapq.heappop(heap)
+            for edge in self.graph.nodes[node_idx].b_edges:
+                if distances[edge.head.index] > distances[node_idx] + edge.weight:
+                    distances[edge.head.index] = distances[node_idx] + edge.weight
                     heapq.heappush(heap, (distances[edge.weight], edge.head.index))
         return distances
 
@@ -35,7 +35,17 @@ class Dijkstra:
         """
         This method finds a shortest path between source and and target_idx node using Dijkstra's algorithm
         """
-        pass
+        distances = [float("inf") for _ in range(len(self.graph.node_count))]
+        distances[source_idx] = 0
+        # initialize the forward nodes heap
+        heap = [(dict[source_idx], source_idx)]
+        while heap:
+            _, node_idx = heapq.heappop(heap)
+            for edge in self.graph.nodes[node_idx].f_edges:
+                if distances[edge.tail.index] > distances[node_idx] + edge.weight:
+                    distances[edge.tail.index] = distances[node_idx] + edge.weight
+                    heapq.heappush(heap, (distances[edge.weight], edge.tail.index))
+        return distances[target_idx]
 
 
 if __name__ == "__main__":
@@ -51,5 +61,8 @@ if __name__ == "__main__":
         [node_a, node_b, node_c],
         [edge_ab, edge_bc]
     )
-    shortest_paths = Dijkstra(graph).back_diff(2)
-    print(shortest_paths)
+    dijkstra = Dijkstra(graph)
+    back_diffs = dijkstra.back_diff(2)
+    s_t_dist = dijkstra.shortest_path(0, 2)
+    print(f"backward difference distances = {back_diffs}")
+    print(f"s-t shortest distance")
