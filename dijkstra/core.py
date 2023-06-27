@@ -1,9 +1,9 @@
 """
 This module contains the core functionality for the graph_explorations package
 """
-from oellrich_graph import Node, Edge, Graph, GraphReader
-
 import heapq
+
+from oellrich_graph import Node, Edge, Graph, GraphReader
 
 
 class Dijkstra:
@@ -16,7 +16,7 @@ class Dijkstra:
 
     def dijkstra_dist(self, i_target: int = None) -> list[float]:
         """
-        This method finds the shortest paths betwen a target node and all other nodes in the graph
+        This method finds the shortest paths between a target node and all other nodes in the graph
         using the backward difference.
         """
         # initialize the distances vector with infinity
@@ -30,18 +30,20 @@ class Dijkstra:
             _, i_node = heapq.heappop(heap)
             # iterate over all backward edges of the node
             for edge in self.graph.nodes[i_node].b_edges:
+                # update the distance if a shorter distance is found
                 if distances[edge.head.index] > distances[i_node] + edge.weight:
                     distances[edge.head.index] = distances[i_node] + edge.weight
+                    # add the shorter distance and node index to the heap
                     heapq.heappush(heap, (distances[edge.head.index], edge.head.index))
         return distances
 
     def dijkstra(
-            self,
-            i_source: int = None,
-            i_target: int = None,
-            dist: list = None,
-            count: bool = False
-            ) -> tuple[float, list[int], int]:
+        self,
+        i_source: int = None,
+        i_target: int = None,
+        dist: list = None,
+        count: bool = False
+    ) -> tuple[float, list[int], int]:
         """
         This method finds a shortest path between source and and target node using Dijkstra's
         algorithm.
@@ -77,7 +79,7 @@ class Dijkstra:
                     predecessors[edge.tail.index] = i_node
                     # add the shorter distance and node index to the heap
                     heapq.heappush(heap, (distances[edge.tail.index], edge.tail.index))
-        return distances[i_target], predecessors, counter if count else distances[i_target], predecessors
+        return (distances[i_target], predecessors, counter) if count else (distances[i_target], predecessors)
 
 
 if __name__ == "__main__":
@@ -86,17 +88,17 @@ if __name__ == "__main__":
         "deutschland1": GraphReader("./graphs/deutschland1.gra", True).read()
     }
 
-    test_graph = tests["test10"]
-    # test_graph = tests["deutschland1"]
+    # test_graph = tests["test10"]
+    test_graph = tests["deutschland1"]
 
     stuttgart_idx = test_graph.node_by_name("711000").index
     berlin_idx = test_graph.node_by_name("300000").index
 
     dijkstra = Dijkstra(test_graph)
-    back_diffs = dijkstra.dijkstra_dist(stuttgart_idx)
+    back_diffs = dijkstra.dijkstra_dist(berlin_idx)
     print(f"backward difference distances = {back_diffs}")
-    s_t_dist, pre_nodes, iter = dijkstra.dijkstra(berlin_idx, stuttgart_idx)
+    s_t_dist, pre_nodes, iter = dijkstra.dijkstra(stuttgart_idx, berlin_idx, count=True)
     print(f"i:{iter} s-t shortest distance = {s_t_dist}")
-    s_t_dist, pre_nodes, iter = dijkstra.dijkstra(berlin_idx, stuttgart_idx, back_diffs)
+    s_t_dist, pre_nodes, iter = dijkstra.dijkstra(stuttgart_idx, berlin_idx, back_diffs, True)
     print(f"i: {iter} s-t shortest distance with dist = {s_t_dist}")
     print(f"predecessors with dist = {pre_nodes}")
