@@ -83,22 +83,42 @@ class Dijkstra:
 
 
 if __name__ == "__main__":
+    # for debug purposes only
     tests = {
         "test10": GraphReader("./graphs/test10.gra", True).read(),
         "deutschland1": GraphReader("./graphs/deutschland1.gra", True).read()
     }
 
-    # test_graph = tests["test10"]
+    # toggle if needed
     test_graph = tests["deutschland1"]
 
+    # toggle if used
     stuttgart_idx = test_graph.node_by_name("711000").index
-    berlin_idx = test_graph.node_by_name("300000").index
 
     dijkstra = Dijkstra(test_graph)
-    back_diffs = dijkstra.dijkstra_dist(berlin_idx)
-    print(f"backward difference distances = {back_diffs}")
-    s_t_dist, pre_nodes, iter = dijkstra.dijkstra(stuttgart_idx, berlin_idx, count=True)
-    print(f"i:{iter} s-t shortest distance = {s_t_dist}")
-    s_t_dist, pre_nodes, iter = dijkstra.dijkstra(stuttgart_idx, berlin_idx, back_diffs, True)
-    print(f"i: {iter} s-t shortest distance with dist = {s_t_dist}")
-    print(f"predecessors with dist = {pre_nodes}")
+    targets = [
+        ("300000", "Berlin"),
+        ("331000", "Potsdam"),
+        ("332100", "Nauen"),
+        ("330100", "Oranienburg"),
+        ("334100", "Strausberg"),
+        ("336100", "Fürstenwalde"),
+        ("337620", "Zeuthen"),
+        ("332050", "Michendorf")
+    ]
+
+    for target in targets:
+        target_idx = test_graph.node_by_name(target[0]).index
+        print(f"\ntarget: {target[1]:<16} | {target[0]} | index = {target_idx}")
+        back_dist = dijkstra.dijkstra_dist(target_idx)
+        #print(f"backward distances = {back_dist}")
+
+        # without backward difference
+        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(stuttgart_idx, target_idx, count=True)
+        print(f"without dist s-t = {s_t_dist} | iterations: {iterations}")
+
+        # with backward difference
+        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(stuttgart_idx, target_idx, back_dist, True)
+        print(f"with    dist s-t = {s_t_dist} | iterations: {iterations}")
+
+        #print(f"predecessors with dist = {pre_nodes}")
