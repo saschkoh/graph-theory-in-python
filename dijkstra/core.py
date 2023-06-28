@@ -4,7 +4,7 @@ This module contains the core functionality for the graph_explorations package
 """
 import heapq
 
-from oellrich_graph import Graph, GraphReader
+from oellrich_graph import Graph
 
 
 class Dijkstra:

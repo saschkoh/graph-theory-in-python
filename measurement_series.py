@@ -1,11 +1,10 @@
-# pylint: disable=import-error
 """
 This module is used to fullfill the task 5 of the first assignment of the course
 "Operations Research" at the Berliner Hochschule fuer Technik (BHT), Department II.
 """
 from prettytable import PrettyTable
-
 from oellrich_graph import GraphReader
+
 from dijkstra.core import Dijkstra
 
 
