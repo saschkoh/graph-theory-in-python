@@ -58,7 +58,9 @@ class Dijkstra:
         predecessors[i_source] = i_source
         # initialize the heap with the source node and its distance
         heap = [(distances[i_source], i_source)]
-        counter = 0 if count else None
+        # set iteration counter if requested
+        if count:
+            counter = 0
         while heap:
             # get the node with the smallest distance
             _, i_node = heapq.heappop(heap)
@@ -81,55 +83,6 @@ class Dijkstra:
                     predecessors[edge.tail.index] = i_node
                     # add the shorter distance and node index to the heap
                     heapq.heappush(heap, (distances[edge.tail.index], edge.tail.index))
-        return (distances[i_target], predecessors, counter) if count else (distances[i_target], predecessors)
-
-
-if __name__ == "__main__":
-    # for debug purposes only
-    tests = {
-        "test10": GraphReader("./graphs/test10.gra", True).read(),
-        "deutschland1": GraphReader("./graphs/deutschland1.gra", True).read()
-    }
-
-    # toggle if needed
-    test_graph = tests["deutschland1"]
-
-    # toggle if used
-    stuttgart_idx = test_graph.node_by_name("711000").index
-
-    dijkstra = Dijkstra(test_graph)
-    targets = [
-        ("300000", "Berlin"),
-        ("331000", "Potsdam"),
-        ("332100", "Nauen"),
-        ("330100", "Oranienburg"),
-        ("334100", "Strausberg"),
-        ("336100", "Fürstenwalde"),
-        ("337620", "Zeuthen"),
-        ("332050", "Michendorf")
-    ]
-
-    for target in targets:
-        target_idx = test_graph.node_by_name(target[0]).index
-        print(f"\ntarget: {target[1]:<16} | {target[0]} | index = {target_idx}")
-        back_dist = dijkstra.dijkstra_dist(target_idx)
-        #print(f"backward distances = {back_dist}")
-
-        # without backward distances
-        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(
-            stuttgart_idx,
-            target_idx,
-            count=True
-        )
-        print(f"without dist s-t = {s_t_dist} | iterations: {iterations}")
-
-        # with backward distances
-        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(
-            stuttgart_idx,
-            target_idx,
-            back_dist,
-            True
-        )
-        print(f"with    dist s-t = {s_t_dist} | iterations: {iterations}")
-
-        #print(f"predecessors with dist = {pre_nodes}")
+        if count:
+            return (distances[i_target], predecessors, counter)
+        return (distances[i_target], predecessors)

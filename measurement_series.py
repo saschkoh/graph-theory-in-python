@@ -13,7 +13,8 @@ def main(
         sources_dict: dict[str, str],
         targets_dict: dict[str, str],
         start: str,
-        main_target: str) -> PrettyTable:
+        main_target: str
+) -> PrettyTable:
     """
     This function is the main function of this module. It takes a dictionary of source nodes
     and target nodes, the start node name and main target node name as arguments and returns a
@@ -23,7 +24,7 @@ def main(
     source_idx = graph.node_by_name(sources_dict[start]).index
     main_target_idx = graph.node_by_name(targets_dict[main_target]).index
     # initialize table
-    title = f"Starknoten {start} | Anzahl Iterationen"
+    title = f"Starknoten {start}"
     table = [["Zielknoten", "Längen c", "Längen c'"]]
     # get backward distances of main target
     back_dist = dijkstra.dijkstra_dist(main_target_idx)
