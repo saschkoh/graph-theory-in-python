@@ -39,4 +39,3 @@ def print_path(path: list[Node], dist: float):
 
 
 if __name__ == "__main__":
-
