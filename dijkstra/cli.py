@@ -111,7 +111,6 @@ class Interface:
         path_strings = [self.graph.nodes[index].name for index in index_path]
         print(f"path: {' -> '.join(path_strings)}")
 
-
     def run(self):
         """
         This method runs the program.
