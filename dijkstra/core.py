@@ -64,7 +64,8 @@ class Dijkstra:
             # stop if the target node is reached
             if i_node == i_target:
                 break
-            counter += 1 if count else None
+            if count:
+                counter += 1
             # iterate over all forward edges of the node
             for edge in self.graph.nodes[i_node].f_edges:
                 if dist is not None:
@@ -113,12 +114,21 @@ if __name__ == "__main__":
         back_dist = dijkstra.dijkstra_dist(target_idx)
         #print(f"backward distances = {back_dist}")
 
-        # without backward difference
-        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(stuttgart_idx, target_idx, count=True)
+        # without backward distances
+        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(
+            stuttgart_idx,
+            target_idx,
+            count=True
+        )
         print(f"without dist s-t = {s_t_dist} | iterations: {iterations}")
 
-        # with backward difference
-        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(stuttgart_idx, target_idx, back_dist, True)
+        # with backward distances
+        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(
+            stuttgart_idx,
+            target_idx,
+            back_dist,
+            True
+        )
         print(f"with    dist s-t = {s_t_dist} | iterations: {iterations}")
 
         #print(f"predecessors with dist = {pre_nodes}")
