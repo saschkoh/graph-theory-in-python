@@ -11,6 +11,7 @@ Author: Sascha Kohler
 from oellrich_graph import GraphReader, Node
 from dijkstra.core import Dijkstra
 
+
 # global functions to track paths alog the predecessors list and print them
 def track_path(predecessors: list[int], source_idx: int, target_idx: int):
     """
@@ -39,7 +40,7 @@ def print_path(path: list[Node], dist: float):
 
 class TasksTest10:
     """
-    This class contains the tests for the test10 graph.
+    This class contains the tasks for the test10 graph.
     """
     def __init__(self):
         self.graph = GraphReader("./graphs/test10.gra", True).read()
@@ -71,7 +72,7 @@ class TasksTest10:
 
     def compute_paths(self, source_node: Node, modified: bool = False):
         """
-        
+        This method computes the shortest paths tree for a given source node and prints the paths.
         """
         for target_node in self.dijkstra.graph.nodes:
             if target_node.index != source_node.index:
@@ -86,50 +87,16 @@ class TasksTest10:
                     print_path(path, dist)
 
 
-def test_deutschland1():
-    graph = GraphReader("./graphs/deutschland1.gra", True).read()
-    dijkstra = Dijkstra(graph)
-
-    stuttgart_idx = graph.node_by_name("711000").index
-    targets = [
-        ("300000", "Berlin"),
-        ("331000", "Potsdam"),
-        ("332100", "Nauen"),
-        ("330100", "Oranienburg"),
-        ("334100", "Strausberg"),
-        ("336100", "Fürstenwalde"),
-        ("337620", "Zeuthen"),
-        ("332050", "Michendorf")
-    ]
-
-    for target in targets:
-        target_idx = graph.node_by_name(target[0]).index
-        print(f"\ntarget: {target[1]:<16} | {target[0]} | index = {target_idx}")
-        back_dist = dijkstra.dijkstra_dist(target_idx)
-        #print(f"backward distances = {back_dist}")
-
-        # without backward distances
-        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(
-            stuttgart_idx,
-            target_idx,
-            count=True
-        )
-        print(f"without dist s-t = {s_t_dist} | iterations: {iterations}")
-
-        # with backward distances
-        s_t_dist, pre_nodes, iterations = dijkstra.dijkstra(
-            stuttgart_idx,
-            target_idx,
-            back_dist,
-            True
-        )
-        print(f"with    dist s-t = {s_t_dist} | iterations: {iterations}")
-
 if __name__ == "__main__":
+    # test10.gra tasks
     test_test10 = TasksTest10()
     # insert test set as list of node names
-    test_test10.task_2() # default test set is ["A", "C"]
-    test_test10.task_3_4() # default test set is ["A", "C", "F"]
+    # default test set is ["A", "C"]
+    test_test10.task_2()
+    # default test set is ["A", "C", "F"], compare with modified algo with compare=True
+    test_test10.task_3_4(compare=True)
+    
+
 
 
 

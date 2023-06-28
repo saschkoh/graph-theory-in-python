@@ -1,9 +1,10 @@
+# pylint: disable=import-error
 """
 This module contains the core functionality for the graph_explorations package
 """
 import heapq
 
-from oellrich_graph import Node, Edge, Graph, GraphReader
+from oellrich_graph import Graph, GraphReader
 
 
 class Dijkstra:

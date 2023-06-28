@@ -2,7 +2,6 @@
 This module contains the unit tests for the Dijsktra class.
 """
 from unittest import TestCase
-import numpy as np
 
 from dijkstra.core import Dijkstra
 from oellrich_graph import GraphReader
@@ -46,7 +45,3 @@ class TestDijkstra(TestCase):
             [round(element, 2) for element in dist_c],
             [3.65, 4.0, 0, 1.41, 2.0, 5.89, 4.65, 4.65, 3.65, 3.0]
         )
-
-    # def test_dijkstra_without_dist_test10(self):
-    #     dijkstra = Dijkstra(self.test_graphs["test10"])
-    #     dist_a, pred_a = dijkstra.dijkstra(0)
