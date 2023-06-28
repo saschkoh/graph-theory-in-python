@@ -9,10 +9,17 @@ pip install -r requirements.txt
 
 ## Usage
 ```bash
-python dijkstra <input_file_path>.gra -s <source_name> -t <target_name> # print shortest path and iterations
-python dijkstra <input_file_path>.gra -s <source_name> -t <target_name> -pr # also print predecessors
+python dijkstra <input_file_path>.gra -t <target_name>  # backward distances
+python dijkstra <input_file_path>.gra -s <source_name> -t <target_name>  # unmodified
 ```
 
+### Options
+Only if both source and target node are given:
+- `-m, --modified` Use modified edge weights for better runtime.
+- `-i, --iter` Print iterations needed to console.
+- `-pr, --predecessors` Print predecessors list to console.
+- `-pa, --path` Print shortest path to console.
+  
 ### Run Unit Tests
 ```bash
 cd graph-theory-in-python
