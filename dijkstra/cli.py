@@ -40,6 +40,7 @@ class Interface:
             nargs="?",
             type=str,
             help="source node name",
+            default=None
         )
         parser.add_argument(
             "-t",
@@ -50,12 +51,15 @@ class Interface:
         )
         parser.add_argument(
             "-m",
-            "--mode",
-            nargs="?",
-            type=int,
-            help="use unmodified or modified edge weigths (0-1-2)",
-            required=False,
-            default=2
+            "--modified",
+            help="use modified edge weigths",
+            action="store_true"
+        )
+        parser.add_argument(
+            "-i",
+            "--iter",
+            help="print the number of iterations",
+            action="store_true",
         )
         parser.add_argument(
             "-pr",
@@ -84,23 +88,12 @@ class Interface:
         else:
             raise FileNotFoundError(f"File {self.args['input_file']} not found")
 
-    def check_st(self):
+    def check_t(self):
         """
-        This method checks if the source and target nodes are specified.
+        This method checks if the target nodes are specified.
         """
-        if self.args["source"] is None:
-            raise ValueError("Source node must be specified")
-        elif self.args["target"] is None:
+        if self.args["target"] is None:
             raise ValueError("Target node must be specified")
-
-    def check_mode(self):
-        """
-        This method checks if the mode input is valid.
-        """
-        if self.args["mode"] in [1, 2]:
-            pass
-        else:
-            raise ValueError("Mode must be 1 or 2")
 
     def init_dijkstra(self):
         """
@@ -108,7 +101,6 @@ class Interface:
         """
         self.graph = GraphReader(self.args["input_file"], True).read()
         self.dijkstra = Dijkstra(self.graph)
-        self.source_idx = self.graph.node_by_name(self.args["source"]).index
         self.target_idx = self.graph.node_by_name(self.args["target"]).index
 
     def print_path(self):
@@ -116,37 +108,44 @@ class Interface:
         This method prints a path if nodes and its distance.
         """
         index_path = track_path(self.pred, self.source_idx, self.target_idx)
-        if index_path is not None:
-            path_strings = [self.graph.nodes[index].name for index in index_path]
-            print(f"path: {' -> '.join(path_strings)}")
-        else:
-            print("No path found")
+        path_strings = [self.graph.nodes[index].name for index in index_path]
+        print(f"path: {' -> '.join(path_strings)}")
+
 
     def run(self):
         """
         This method runs the program.
         """
         self.parse_args()
-        self.check_st()
-        self.check_mode()
+        self.check_t()
         self.init_dijkstra()
-        if self.args["mode"] == 1:
-            print("\nUsing mode 1: unmodified edge weights")
-            self.dist, self.pred, self.iter = self.dijkstra.dijkstra(self.source_idx,
-                                                                     self.target_idx,
-                                                                     count=True)
-        elif self.args["mode"] == 2:
-            print("\nUsing mode 2: modified edge weights")
+        if self.args["source"] is None:
+            print("\nUsing mode 0: only backward distances")
             back_dist = self.dijkstra.dijkstra_dist(self.target_idx)
-            self.dist, self.pred, self.iter = self.dijkstra.dijkstra(self.source_idx,
-                                                                     self.target_idx,
-                                                                     back_dist, count=True)
-        print(f"s -> t shortest path: {self.dist}")
-        print(f"iterations: {self.iter}")
-        if self.args["predecessors"]:
-            print(f"predecessors: {self.pred}")
-        if self.args["path"]:
-            self.print_path()
+            print(f"backward distances: {back_dist}")
+        else:
+            self.source_idx = self.graph.node_by_name(self.args["source"]).index
+            if self.args["modified"]:
+                print("\nUsing mode 1: modified edge weights")
+                back_dist = self.dijkstra.dijkstra_dist(self.target_idx)
+                self.dist, self.pred, self.iter = self.dijkstra.dijkstra(
+                    self.source_idx, self.target_idx, back_dist, count=True
+                )
+            else:
+                print("\nUsing mode 2: unmodified edge weights")
+                self.dist, self.pred, self.iter = self.dijkstra.dijkstra(
+                    self.source_idx, self.target_idx, count=True
+                )
+            if self.dist is not float("inf"):
+                print(f"s -> t shortest path: {self.dist}")
+                if self.args["iter"]:
+                    print(f"iterations: {self.iter}")
+                if self.args["predecessors"]:
+                    print(f"predecessors: {self.pred}")
+                if self.args["path"]:
+                    self.print_path()
+            else:
+                print("No path found")
 
 
 def main():
