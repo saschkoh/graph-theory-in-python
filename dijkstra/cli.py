@@ -3,24 +3,7 @@ import os
 
 from oellrich_graph import GraphReader
 from core import Dijkstra
-
-
-# global function to track paths along the predecessors list
-def track_path(predecessors: list[int], source_idx: int, target_idx: int):
-    """
-    This function tracks a path from source index to target index from its calculated predecessors
-    list and returns a list of node indices in the logical order of the path from source to target.
-    """
-    path = []
-    current_idx = target_idx
-    if predecessors[current_idx] is not None:
-        while current_idx != source_idx:
-            path.append(current_idx)
-            current_idx = predecessors[current_idx]
-        path.append(predecessors[source_idx])
-        path = path[::-1]
-        return path
-    return None
+from helpers import track_path
 
 
 class Interface:
@@ -70,7 +53,7 @@ class Interface:
             "--mode",
             nargs="?",
             type=int,
-            help="use unmodified or modified edge weigths (1-2)",
+            help="use unmodified or modified edge weigths (0-1-2)",
             required=False,
             default=2
         )
@@ -133,8 +116,11 @@ class Interface:
         This method prints a path if nodes and its distance.
         """
         index_path = track_path(self.pred, self.source_idx, self.target_idx)
-        path_strings = [self.graph.nodes[index].name for index in index_path]
-        print(f"path: {' -> '.join(path_strings)}")
+        if index_path is not None:
+            path_strings = [self.graph.nodes[index].name for index in index_path]
+            print(f"path: {' -> '.join(path_strings)}")
+        else:
+            print("No path found")
 
     def run(self):
         """
@@ -146,11 +132,15 @@ class Interface:
         self.init_dijkstra()
         if self.args["mode"] == 1:
             print("\nUsing mode 1: unmodified edge weights")
-            self.dist, self.pred, self.iter = self.dijkstra.dijkstra(self.source_idx, self.target_idx, count=True)
+            self.dist, self.pred, self.iter = self.dijkstra.dijkstra(self.source_idx,
+                                                                     self.target_idx,
+                                                                     count=True)
         elif self.args["mode"] == 2:
             print("\nUsing mode 2: modified edge weights")
             back_dist = self.dijkstra.dijkstra_dist(self.target_idx)
-            self.dist, self.pred, self.iter = self.dijkstra.dijkstra(self.source_idx, self.target_idx, back_dist, count=True)
+            self.dist, self.pred, self.iter = self.dijkstra.dijkstra(self.source_idx,
+                                                                     self.target_idx,
+                                                                     back_dist, count=True)
         print(f"s -> t shortest path: {self.dist}")
         print(f"iterations: {self.iter}")
         if self.args["predecessors"]:

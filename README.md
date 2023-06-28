@@ -8,6 +8,10 @@ pip install -r requirements.txt
 ```
 
 ## Usage
+```bash
+python dijkstra <input_file_path>.gra -s <source_name> -t <target_name> # print shortest path and iterations
+python dijkstra <input_file_path>.gra -s <source_name> -t <target_name> -pr # also print predecessors
+```
 
 ### Run Unit Tests
 ```bash
