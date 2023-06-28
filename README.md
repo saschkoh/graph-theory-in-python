@@ -6,3 +6,11 @@ This is a Python implementation of Dijkstra's algorithm for finding shortest pat
 ```bash
 pip install -r requirements.txt
 ```
+
+## Usage
+
+### Run Unit Tests
+```bash
+cd graph-theory-in-python
+python -m unittest test.test_dijkstra
+```

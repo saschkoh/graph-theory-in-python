@@ -1,6 +1,6 @@
 """
-This module is used to fullfill the task 5 of the first assignment of the course
-"Operations Research" at the Berliner Hochschule fuer Technik (BHT), Department II.
+This module is used to fullfill the task 5 of the first assignment in the course
+"Operations Research" at Berliner Hochschule fuer Technik (BHT), Department II.
 """
 from prettytable import PrettyTable
 from oellrich_graph import GraphReader
