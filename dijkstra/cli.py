@@ -1,3 +1,6 @@
+"""
+This module contains the CLI for the Dijkstra algorithm implementation.
+"""
 import argparse
 import os
 

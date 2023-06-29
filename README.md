@@ -2,7 +2,12 @@
 
 This is a Python implementation of Dijkstra's algorithm for finding shortest paths in a graph. It allows to read graphs from .gra-files and calculate the shortest distances from a target node to all other nodes using backward differences or find the shortest path of a source node to a target node either with unmodified or modified edge weights for better performance.
 
+The project was an assignment in the course "Operations Research" at Berliner Hochschule für Technik (BHT) in Department II, lectured by Prof. Martin Oellrich. To read and handle graphs, a generic graph class in Python based on the C++ implementation of Prof. Oellrich is being used.
+
+The future plan is to expand the package with further graph exploration methods.
+
 ## Installation
+Git is needed to install the requirements.
 ```bash
 pip install -r requirements.txt
 ```
