@@ -19,7 +19,7 @@ def main(
     This function is the main function of this module. It takes the graph's file path, the start
     node name and main target node name and the corresponding source and target dictionaries as
     arguments and returns a PrettyTable with the results of the iteration measurement series for
-    unmodified and modified edge lengths derived from the main target's backward distances.
+    unmodified and modified edge weights derived from the main target's backward distances.
     """
     graph = GraphReader(graph_string, True).read()
     source_idx = graph.node_by_name(sources_dict[start]).index
@@ -56,7 +56,7 @@ def main(
 
 
 if __name__ == "__main__":
-    # define graph paths, source and target nodes
+    # define graph paths, source and target nodes, adjust for different path
     graphs = {
         1: "./test/test-graphs/deutschland1.gra",
         2: "./test/test-graphs/deutschland2.gra"
